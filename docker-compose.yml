@@ -1,0 +1,18 @@
+version: "3"
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
+    working_dir: /app
+    command: ["python", "fetch_feeds.py"]
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./data:/data
+    ports:
+      - 8501:8501
+    depends_on:
+      - backend
