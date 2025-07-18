@@ -1,6 +1,10 @@
 # Threat Intel Dashboard
 
 [![Python](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![Pandas](https://img.shields.io/badge/pandas-2.2.2-darkgreen?logo=pandas)](https://pandas.pydata.org/)
+[![Streamlit](https://img.shields.io/badge/streamlit-1.34.0-red?logo=streamlit)](https://streamlit.io/)
+[![Requests](https://img.shields.io/badge/requests-2.31.0-blue?logo=python)](https://requests.readthedocs.io/)
+[![python-dotenv](https://img.shields.io/badge/dotenv-1.0.1-lightgrey?logo=python)](https://pypi.org/project/python-dotenv/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![CI](https://img.shields.io/badge/CI%2FCD-passing-brightgreen)
 ![Last Update](https://img.shields.io/badge/last%20update-July%202025-blue)
