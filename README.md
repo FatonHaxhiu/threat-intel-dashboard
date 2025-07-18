@@ -11,15 +11,6 @@
 
 ---
 
-## 🛠️ Tools Used
-- **Python 3.11**: Backend scripting and dashboard
-- **Pandas**: Data manipulation and CSV handling
-- **Requests**: HTTP requests for fetching threat intel feeds
-- **Streamlit**: Dashboard frontend for visualization and search
-- **dotenv**: Secure management of API keys and configuration
-
----
-
 ## 🚀 Purpose of the Project
 
 The Threat Intel Dashboard is an open-source tool to help security analysts and IT teams easily aggregate, visualize, and search threat intelligence data from multiple sources. By collecting indicators of compromise (IOCs) such as suspicious IP addresses from feeds like AlienVault OTX and AbuseIPDB, the dashboard enables rapid situational awareness, threat hunting, and actionable security response.
