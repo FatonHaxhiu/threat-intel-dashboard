@@ -93,4 +93,4 @@ Pull requests and feature suggestions are welcome! See [CONTRIBUTING.md](CONTRIB
 
 ## 📄 License
 
-MIT License (see `LICENSE` for details)
+This project is licensed under the [MIT License](LICENSE).
