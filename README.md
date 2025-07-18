@@ -6,7 +6,6 @@
 [![Requests](https://img.shields.io/badge/requests-2.31.0-blue?logo=python)](https://requests.readthedocs.io/)
 [![python-dotenv](https://img.shields.io/badge/dotenv-1.0.1-lightgrey?logo=python)](https://pypi.org/project/python-dotenv/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![CI](https://img.shields.io/badge/CI%2FCD-passing-brightgreen)
 ![Last Update](https://img.shields.io/badge/last%20update-July%202025-blue)
 
 ---
