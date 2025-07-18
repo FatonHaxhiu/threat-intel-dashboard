@@ -1,5 +1,6 @@
 # Threat Intel Dashboard
 
+[![CI](https://github.com/FatonHaxhiu/threat-intel-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/FatonHaxhiu/threat-intel-dashboard/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![Pandas](https://img.shields.io/badge/pandas-2.2.2-darkgreen?logo=pandas)](https://pandas.pydata.org/)
 [![Streamlit](https://img.shields.io/badge/streamlit-1.34.0-red?logo=streamlit)](https://streamlit.io/)
