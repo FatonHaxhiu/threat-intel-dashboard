@@ -2,11 +2,25 @@ import streamlit as st
 import pandas as pd
 import os
 import altair as alt  # Add Altair for charting
+import sys 
 
 DATA_DIR = "../data"
-
-# Ensure the directory exists before listing its contents
 os.makedirs(DATA_DIR, exist_ok=True)
+
+# Run the backend fetcher if data files are missing
+required_files = [
+    "alienvault_ips.csv",
+    "abuseipdb_ips.csv",
+    "urlhaus_data.csv"
+]
+missing = [f for f in required_files if not os.path.exists(os.path.join(DATA_DIR, f))]
+if missing:
+    try:
+        sys.path.append(os.path.abspath("../backend"))
+        from fetch_feeds import main as fetch_main
+        fetch_main()
+    except Exception as e:
+        print("Error running backend fetcher:", e)
             
 st.title("Threat Intel Dashboard")
 
