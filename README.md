@@ -21,6 +21,7 @@ The Threat Intel Dashboard is an open-source tool to help security analysts and 
 - Allows lookup of specific IPs to check if they appear in threat feeds
 - Supports exporting of current threat lists for further use (e.g., in firewalls)
 - Built for extensibility—add new feeds or enrichments easily!
+- **Continuous Integration:** Automated testing with GitHub Actions and pytest for code reliability
 
 ---
 
@@ -29,7 +30,7 @@ The Threat Intel Dashboard is an open-source tool to help security analysts and 
 ### 1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/yourusername/threat-intel-dashboard.git
+git clone https://github.com/FatonHaxhiu/threat-intel-dashboard.git
 cd threat-intel-dashboard
 ```
 
@@ -68,7 +69,17 @@ streamlit run dashboard/app.py
 
 This will open your default browser to the dashboard interface (usually at `http://localhost:8501`).
 
-### 6. **Explore and Search**
+### 6. **Testing and CI**
+
+- **Run all tests locally:**  
+  ```bash
+  pytest
+  ```
+- **CI with GitHub Actions:**  
+  Every commit and pull request triggers automated tests (see badge above).  
+  Tests are located in the `tests/` directory and use `pytest` with mocking to avoid external API calls.
+
+### 7. **Explore and Search**
 
 - View summary stats and visualizations on the main page
 - Use the search box to look up specific IPs
@@ -82,6 +93,7 @@ This will open your default browser to the dashboard interface (usually at `http
 - Add new threat feeds by creating new functions in `backend/fetch_feeds.py`
 - Add enrichments (ASN, geo, etc.) using APIs like ipinfo.io or ip-api.com
 - Improve frontend visualizations or add new search/filter features
+- Write more tests for new features and keep CI green!
 
 ---
 
