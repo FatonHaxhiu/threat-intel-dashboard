@@ -79,6 +79,7 @@ def main():
     os.makedirs(DATA_DIR, exist_ok=True)
     av_key = os.getenv("ALIENVAULT_API_KEY")
     abuse_key = os.getenv("ABUSEIPDB_API_KEY")
+    fetch_urlhaus()                    # <-- Add this line!
     fetch_alienvault(av_key)
     fetch_abuseipdb(abuse_key)
     print("Fetched threat feeds.")
