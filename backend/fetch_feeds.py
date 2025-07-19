@@ -47,6 +47,33 @@ def fetch_abuseipdb(api_key):
         print("Raw response text:")
         print(r.text)
 
+def fetch_urlhaus():
+    """
+    Fetches the latest URLhaus CSV and saves malicious URLs and their associated IPs.
+    """
+    import requests
+    import pandas as pd
+    from io import StringIO
+    import os
+
+    url = "https://urlhaus.abuse.ch/downloads/csv/"
+    resp = requests.get(url)
+    # URLhaus CSV has comment lines (starting with '#'); skip them
+    lines = [line for line in resp.text.splitlines() if line and not line.startswith("#")]
+    if not lines:
+        print("No valid data lines found in URLhaus feed!")
+        return
+    # Read the cleaned CSV content
+    csv_content = "\n".join(lines)
+    df = pd.read_csv(StringIO(csv_content))
+    # Extract IP from URL if present
+    df["ip"] = df["url"].astype(str).str.extract(r"https?://(\d+\.\d+\.\d+\.\d+)")
+    df["source"] = "URLhaus"
+    save_cols = [col for col in ["url", "ip", "threat", "dateadded", "source"] if col in df.columns]
+    out = df[save_cols]
+    out.to_csv(os.path.join(DATA_DIR, "urlhaus_data.csv"), index=False)
+    print(f"Saved {len(out)} URLhaus records.")
+    
 def main():
     load_dotenv()
     os.makedirs(DATA_DIR, exist_ok=True)
