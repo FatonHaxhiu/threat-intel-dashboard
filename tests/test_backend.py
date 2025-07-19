@@ -1,4 +1,5 @@
 from backend.fetch_feeds import fetch_alienvault, fetch_abuseipdb
+from backend.fetch_feeds import fetch_urlhaus 
 
 def test_fetch_alienvault_runs_without_crash(monkeypatch, tmp_path):
     import requests
@@ -69,3 +70,4 @@ def test_fetch_abuseipdb_runs_without_crash(monkeypatch, tmp_path):
     assert "source" in df.columns
     assert set(df["ipAddress"] if "ipAddress" in df.columns else df["ip"]) == {"4.4.4.4", "5.5.5.5"}
     assert all(df["source"] == "AbuseIPDB")
+
