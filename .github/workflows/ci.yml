@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   build:
@@ -27,9 +27,8 @@ jobs:
     - name: Lint with flake8
       run: |
         pip install flake8
-        # Ignore Streamlit examples and notebooks by default
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
 
-    - name: (Optional) Run tests
+    - name: Run tests with pytest
       run: |
-        echo "No tests yet!"
+        pytest
