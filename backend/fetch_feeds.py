@@ -2,8 +2,9 @@ import os
 import requests
 import pandas as pd
 from dotenv import load_dotenv
+from io import StringIO
 
-DATA_DIR = "../data"
+DATA_DIR = "data"
 
 def fetch_alienvault(api_key):
     url = "https://otx.alienvault.com/api/v1/pulses/subscribed"
@@ -11,7 +12,6 @@ def fetch_alienvault(api_key):
     r = requests.get(url, headers=headers)
     data = r.json()
     ips = []
-    # Each pulse in results has an 'indicators' array; each indicator has 'type' and 'indicator'
     for pulse in data.get("results", []):
         for indicator in pulse.get("indicators", []):
             if indicator.get("type") == "IPv4":
@@ -48,14 +48,6 @@ def fetch_abuseipdb(api_key):
         print(r.text)
 
 def fetch_urlhaus():
-    """
-    Fetches the latest URLhaus CSV and saves malicious URLs and their associated IPs.
-    """
-    import requests
-    import pandas as pd
-    from io import StringIO
-    import os
-
     url = "https://urlhaus.abuse.ch/downloads/csv/"
     resp = requests.get(url)
     # URLhaus CSV has comment lines (starting with '#'); skip them
@@ -63,23 +55,23 @@ def fetch_urlhaus():
     if not lines:
         print("No valid data lines found in URLhaus feed!")
         return
-    # Read the cleaned CSV content
     csv_content = "\n".join(lines)
     df = pd.read_csv(StringIO(csv_content))
     # Extract IP from URL if present
-    df["ip"] = df["url"].astype(str).str.extract(r"https?://(\d+\.\d+\.\d+\.\d+)")
+    if "url" in df.columns:
+        df["ip"] = df["url"].astype(str).str.extract(r"https?://(\d+\.\d+\.\d+\.\d+)")
     df["source"] = "URLhaus"
     save_cols = [col for col in ["url", "ip", "threat", "dateadded", "source"] if col in df.columns]
     out = df[save_cols]
     out.to_csv(os.path.join(DATA_DIR, "urlhaus_data.csv"), index=False)
     print(f"Saved {len(out)} URLhaus records.")
-    
+
 def main():
     load_dotenv()
     os.makedirs(DATA_DIR, exist_ok=True)
     av_key = os.getenv("ALIENVAULT_API_KEY")
     abuse_key = os.getenv("ABUSEIPDB_API_KEY")
-    fetch_urlhaus()                    # <-- Add this line!
+    fetch_urlhaus()
     fetch_alienvault(av_key)
     fetch_abuseipdb(abuse_key)
     print("Fetched threat feeds.")

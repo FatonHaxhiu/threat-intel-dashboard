@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
 import os
-import altair as alt  # Add Altair for charting
-import sys 
+import altair as alt
+import sys
 
-DATA_DIR = "../data"
+DATA_DIR = "data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # Run the backend fetcher if data files are missing
@@ -16,12 +16,12 @@ required_files = [
 missing = [f for f in required_files if not os.path.exists(os.path.join(DATA_DIR, f))]
 if missing:
     try:
-        sys.path.append(os.path.abspath("../backend"))
+        sys.path.append(os.path.abspath("./backend"))
         from fetch_feeds import main as fetch_main
         fetch_main()
     except Exception as e:
-        print("Error running backend fetcher:", e)
-            
+        st.error(f"Error running backend fetcher: {e}")
+
 st.title("Threat Intel Dashboard")
 
 # --- Load all threat CSVs into a single DataFrame ---
@@ -47,7 +47,7 @@ if "ipaddress" in all_data.columns and "ip" not in all_data.columns:
 
 # --- Visualization: Bar chart of IPs per source ---
 st.subheader("📊 Number of Threat IPs by Source")
-if "source" in all_data.columns:
+if "source" in all_data.columns and "ip" in all_data.columns:
     count_by_source = all_data.groupby("source")["ip"].count().reset_index()
     count_by_source = count_by_source.rename(columns={"ip": "count"})
     bar_chart = alt.Chart(count_by_source).mark_bar().encode(
@@ -57,7 +57,7 @@ if "source" in all_data.columns:
     )
     st.altair_chart(bar_chart, use_container_width=True)
 else:
-    st.info("No 'source' column found in the data.")
+    st.info("No 'source' or 'ip' column found in the data.")
 
 # --- IP Search Feature ---
 st.header("🔎 IP Address Search")
