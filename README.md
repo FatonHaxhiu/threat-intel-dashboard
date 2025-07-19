@@ -81,13 +81,13 @@ This will open your default browser to the dashboard interface (usually at `http
 
 ### 7. **Explore and Search**
 
+- **Search for specific IPs:** Use the search box to check if an IP is present in the threat feeds.
 - View summary stats and visualizations on the main page
 - Use the search box to look up specific IPs
 - Browse the full table of threat IPs
 - Download the combined IP list as CSV
 
 ---
-
 ## 🧩 Extending the Project
 
 - Add new threat feeds by creating new functions in `backend/fetch_feeds.py`

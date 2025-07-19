@@ -1,71 +1,50 @@
 import streamlit as st
 import pandas as pd
 import os
-from datetime import datetime
 
 DATA_DIR = "../data"
 
-def load_feed(filename):
-    path = os.path.join(DATA_DIR, filename)
-    if os.path.exists(path):
-        df = pd.read_csv(path)
-        return df, os.path.getmtime(path)
-    else:
-        return pd.DataFrame(columns=['ip', 'source']), None
-
-def format_time(epoch):
-    if epoch is None:
-        return "Never"
-    dt = datetime.fromtimestamp(epoch)
-    return dt.strftime("%Y-%m-%d %H:%M:%S")
-
-# Load data
-av_df, av_time = load_feed("alienvault_ips.csv")
-abuse_df, abuse_time = load_feed("abuseipdb_ips.csv")
-
-# Merge feeds for search
-all_df = pd.concat([av_df, abuse_df], ignore_index=True).drop_duplicates(subset=["ip", "source"])
-unique_ips = all_df["ip"].nunique()
-sources = all_df["source"].unique()
-
 st.title("Threat Intel Dashboard")
 
-# Feed freshness
-st.sidebar.header("Feed Status")
-st.sidebar.write(f"**AlienVault OTX:** {len(av_df)} IPs (updated {format_time(av_time)})")
-st.sidebar.write(f"**AbuseIPDB:** {len(abuse_df)} IPs (updated {format_time(abuse_time)})")
-st.sidebar.write(f"**Total Unique IPs:** {unique_ips}")
+# Load all threat CSVs into a single DataFrame
+dfs = []
+for fname in os.listdir(DATA_DIR):
+    if fname.endswith(".csv"):
+        try:
+            df = pd.read_csv(os.path.join(DATA_DIR, fname))
+            dfs.append(df)
+        except Exception as e:
+            st.warning(f"Could not load {fname}: {e}")
+if dfs:
+    all_data = pd.concat(dfs, ignore_index=True)
+else:
+    st.error("No threat data found. Please run the backend fetcher first.")
+    st.stop()
 
-# Summary stats
-st.subheader("Summary")
-col1, col2, col3 = st.columns(3)
-col1.metric("AlienVault IPs", len(av_df))
-col2.metric("AbuseIPDB IPs", len(abuse_df))
-col3.metric("Total Unique IPs", unique_ips)
+# Normalize column names for searching
+all_data.columns = [c.lower() for c in all_data.columns]
+if "ipaddress" in all_data.columns and "ip" not in all_data.columns:
+    all_data = all_data.rename(columns={"ipaddress": "ip"})
 
-# Bar chart of source counts
-source_counts = all_df.groupby("source")["ip"].nunique()
-st.bar_chart(source_counts)
+# --- IP Search Feature ---
+st.header("🔎 IP Address Search")
+ip_query = st.text_input("Enter an IP address to search:")
 
-# IP search
-st.subheader("IP Lookup")
-ip_query = st.text_input("Search for an IP address")
 if ip_query:
-    hits = all_df[all_df["ip"] == ip_query]
-    if not hits.empty:
-        st.success(f"Found {ip_query} in: {', '.join(hits['source'].unique())}")
-        st.table(hits)
+    found = all_data[all_data["ip"].astype(str) == ip_query.strip()]
+    if not found.empty:
+        st.success(f"IP {ip_query} FOUND in threat feeds!")
+        st.dataframe(found)
     else:
-        st.warning(f"{ip_query} not found in current threat feeds.")
+        st.info(f"IP {ip_query} not found in current threat lists.")
 
-# Show all data
-st.subheader("All Threat IPs")
-st.dataframe(all_df.sort_values("ip"), use_container_width=True)
+# --- Show the full table & allow download ---
+st.header("All Threat IPs")
+st.dataframe(all_data)
 
-# Download button
 st.download_button(
-    label="Download All IPs (CSV)",
-    data=all_df.to_csv(index=False),
+    label="Download all threat IPs as CSV",
+    data=all_data.to_csv(index=False),
     file_name="all_threat_ips.csv",
     mime="text/csv"
 )
