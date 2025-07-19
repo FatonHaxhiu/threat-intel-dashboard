@@ -5,6 +5,9 @@ import altair as alt  # Add Altair for charting
 
 DATA_DIR = "../data"
 
+# Ensure the directory exists before listing its contents
+os.makedirs(DATA_DIR, exist_ok=True)
+            
 st.title("Threat Intel Dashboard")
 
 # --- Load all threat CSVs into a single DataFrame ---
